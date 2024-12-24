@@ -25,21 +25,27 @@ public class XxlJobScheduler  {
         initI18n();
 
         // admin trigger pool start
+        // 初始化线程池
         JobTriggerPoolHelper.toStart();
 
         // admin registry monitor run
+        // 注册执行器
         JobRegistryHelper.getInstance().start();
 
         // admin fail-monitor run
+        // 执行失败任务发告警邮件
         JobFailMonitorHelper.getInstance().start();
 
         // admin lose-monitor run ( depend on JobTriggerPoolHelper )
+        // 任务结果丢失处理：调度记录停留在 "运行中" 状态超过10min，且对应执行器心跳注册失败不在线，则将本地调度主动标记失败；
         JobCompleteHelper.getInstance().start();
 
         // admin log report start
+        // 统计报表 清理日志
         JobLogReportHelper.getInstance().start();
 
         // start-schedule  ( depend on JobTriggerPoolHelper )
+        // 开始调度任务
         JobScheduleHelper.getInstance().start();
 
         logger.info(">>>>>>>>> init xxl-job admin success.");

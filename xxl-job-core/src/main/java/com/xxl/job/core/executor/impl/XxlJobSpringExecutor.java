@@ -28,6 +28,7 @@ public class XxlJobSpringExecutor extends XxlJobExecutor implements ApplicationC
 
 
     // start
+    // bean初始化完之后，执行该方法
     @Override
     public void afterSingletonsInstantiated() {
 
@@ -77,6 +78,18 @@ public class XxlJobSpringExecutor extends XxlJobExecutor implements ApplicationC
         }
     }*/
 
+    /**
+     * 获取到所有的注册的beanName
+     * 针对每一个bean 进行扫描，获取带有@XxlJob 注解的方法，涉及一个工具类工具类MethodIntrospector
+     * 对每一个获带有@XxlJob 注解的方法进行校验
+     * 这里进行一些校验：
+     * 1. job 名字不能为空
+     * 2. job 名字不能重复
+     * 3. 入参必须要用，而且只能有1个， 还要是String 类型
+     * 4. 返回类型 必须要是ReturnT.class
+     * 获取 初始化方法init() 和 销毁方法 destroy()
+     * 放入Map ,后续进行注册
+     */
     private void initJobHandlerMethodRepository(ApplicationContext applicationContext) {
         if (applicationContext == null) {
             return;
@@ -96,6 +109,7 @@ public class XxlJobSpringExecutor extends XxlJobExecutor implements ApplicationC
             }
 
             // filter method
+            // 过滤被XxlJob注解的方法
             Map<Method, XxlJob> annotatedMethods = null;   // referred to ：org.springframework.context.event.EventListenerMethodProcessor.processBean
             try {
                 annotatedMethods = MethodIntrospector.selectMethods(bean.getClass(),

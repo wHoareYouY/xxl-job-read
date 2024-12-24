@@ -38,6 +38,7 @@ public class JobFailMonitorHelper {
 				while (!toStop) {
 					try {
 
+						// 查询执行失败，且未告警的任务
 						List<Long> failLogIds = XxlJobAdminConfig.getAdminConfig().getXxlJobLogDao().findFailJobLogIds(1000);
 						if (failLogIds!=null && !failLogIds.isEmpty()) {
 							for (long failLogId: failLogIds) {

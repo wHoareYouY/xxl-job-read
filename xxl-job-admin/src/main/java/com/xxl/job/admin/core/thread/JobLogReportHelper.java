@@ -40,6 +40,7 @@ public class JobLogReportHelper {
                 while (!toStop) {
 
                     // 1、log-report refresh: refresh log report in 3 days
+                    // 统计近三天的执行情况
                     try {
 
                         for (int i = 0; i < 3; i++) {
@@ -94,6 +95,7 @@ public class JobLogReportHelper {
                     }
 
                     // 2、log-clean: switch open & once each day
+                    // 清理日志
                     if (XxlJobAdminConfig.getAdminConfig().getLogretentiondays()>0
                             && System.currentTimeMillis() - lastCleanLogTime > 24*60*60*1000) {
 

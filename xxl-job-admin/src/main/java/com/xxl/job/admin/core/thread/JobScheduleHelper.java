@@ -42,6 +42,8 @@ public class JobScheduleHelper {
             public void run() {
 
                 try {
+                    // 对齐到整s
+                    // 举例: 现在是17:37:05的100ms,那么上述公式 = 4900ms，从现在开始睡眠4900ms，唤醒的时刻，便是整秒的17:37:10。
                     TimeUnit.MILLISECONDS.sleep(5000 - System.currentTimeMillis()%1000 );
                 } catch (Throwable e) {
                     if (!scheduleThreadToStop) {
@@ -82,6 +84,7 @@ public class JobScheduleHelper {
                             for (XxlJobInfo jobInfo: scheduleList) {
 
                                 // time-ring jump
+                                // 调度过期
                                 if (nowTime > jobInfo.getTriggerNextTime() + PRE_READ_MS) {
                                     // 2.1、trigger-expire > 5s：pass && make next-trigger-time
                                     logger.warn(">>>>>>>>>>> xxl-job, schedule misfire, jobId = " + jobInfo.getId());
@@ -123,6 +126,7 @@ public class JobScheduleHelper {
 
                                 } else {
                                     // 2.3、trigger-pre-read：time-ring trigger && make next-trigger-time
+                                    // 处理还没到触发时间的任务
 
                                     // 1、make ring second
                                     int ringSecond = (int)((jobInfo.getTriggerNextTime()/1000)%60);

@@ -53,12 +53,14 @@ public class JobRegistryHelper {
 				});
 
 		// for monitor
+		// 获取自动注册的执行器，并刷新到xxl_job_group表中的address_list字段中
 		registryMonitorThread = new Thread(new Runnable() {
 			@Override
 			public void run() {
 				while (!toStop) {
 					try {
 						// auto registry group
+						// 获取自动注册的列表
 						List<XxlJobGroup> groupList = XxlJobAdminConfig.getAdminConfig().getXxlJobGroupDao().findByAddressType(0);
 						if (groupList!=null && !groupList.isEmpty()) {
 
